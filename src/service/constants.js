@@ -4,7 +4,8 @@ module.exports = {
   DEFAULT_COMMAND: `--help`,
   USER_ARGV_INDEX: 2,
   ExitCode: {
-    success: 0
+    success: 0,
+    error: 1,
   },
   MockData: {
     FILE_NAME: `mocks.json`,

@@ -3,6 +3,7 @@
 const fs = require(`fs`);
 const {getRandomInt, getRandomPostDate, shuffle} = require(`../utils`);
 const {
+  ExitCode,
   MockData: {
     FILE_NAME,
     TITLES,
@@ -33,7 +34,7 @@ module.exports = {
 
     if (countPosts > MAX_POSTS) {
       console.error(`Не больше ${MAX_POSTS} публикаций`);
-      process.exit(1);
+      process.exit(ExitCode.error);
     }
 
     const posts = generatePosts(countPosts);
