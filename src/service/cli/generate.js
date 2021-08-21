@@ -1,16 +1,17 @@
 'use strict';
 
-const fs = require(`fs`);
+const fs = require(`fs`).promises;
+const chalk = require(`chalk`);
 const {getRandomInt, getRandomPostDate, shuffle} = require(`../utils`);
 const {
   ExitCode,
   MockData: {
     FILE_NAME,
-    TITLES,
+    TITLE,
     ANNOUNCE,
     CATEGORY,
-    MAX_POSTS,
-    MIN_POSTS,
+    MIN_POSTS_COUNT,
+    MAX_POSTS_COUNT,
   }
 } = require(`../constants`);
 
@@ -18,33 +19,33 @@ const {
 const generatePosts = (count) =>
   Array(count).fill({}).map(() => (
     {
-      title: TITLES[getRandomInt(0, TITLES.length - 1)],
-      announce: shuffle(ANNOUNCE.slice()).slice(0, getRandomInt(1, 6)).join(` `),
-      fullText: shuffle(ANNOUNCE.slice()).slice(0, 7).join(` `),
+      title: TITLE[getRandomInt(0, TITLE.length - 1)],
+      announce: shuffle(ANNOUNCE).slice(0, getRandomInt(1, 6)).join(` `),
+      fullText: shuffle(ANNOUNCE).slice(0, 7).join(` `),
       createdDate: getRandomPostDate(),
-      category: shuffle(CATEGORY.slice()).slice(0, getRandomInt(1, 3)),
+      category: shuffle(CATEGORY).slice(0, getRandomInt(1, 3)),
     })
   );
 
 module.exports = {
   name: `--generate`,
-  run(args) {
+  async run(args) {
     const [count] = args;
-    const countPosts = Number.parseInt(count, 10) || MIN_POSTS;
+    const postsCount = Number.parseInt(count, 10) || MIN_POSTS_COUNT;
 
-    if (countPosts > MAX_POSTS) {
-      console.error(`Не больше ${MAX_POSTS} публикаций`);
-      process.exit(ExitCode.error);
+    if (postsCount > MAX_POSTS_COUNT) {
+      console.error(chalk.red(`Не больше ${MAX_POSTS_COUNT} публикаций`));
+      process.exit(ExitCode.ERROR);
     }
 
-    const posts = generatePosts(countPosts);
+    const posts = generatePosts(postsCount);
     const content = JSON.stringify(posts);
 
-    fs.writeFile(`../../${FILE_NAME}`, content, (err) => {
-      if (err) {
-        return console.error(`Can't write data to file - ${err}`);
-      }
-      return console.info(`Operation success. File created.`);
-    });
+    try {
+      await fs.writeFile(FILE_NAME, content);
+      console.info(chalk.green(`Operation success. File created.`));
+    } catch (e) {
+      console.error(chalk.red(`Can't write data to file - ${e}`));
+    }
   }
 };
