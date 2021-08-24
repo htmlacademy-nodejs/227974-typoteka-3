@@ -4,12 +4,12 @@ module.exports = {
   DEFAULT_COMMAND: `--help`,
   USER_ARGV_INDEX: 2,
   ExitCode: {
-    success: 0,
-    error: 1,
+    SUCCESS: 0,
+    ERROR: 1,
   },
   MockData: {
     FILE_NAME: `mocks.json`,
-    TITLES: [
+    TITLE: [
       `Ёлки. История деревьев`,
       `Как перестать беспокоиться и начать жить`,
       `Как достигнуть успеха не вставая с кресла`,
@@ -56,8 +56,8 @@ module.exports = {
       `Программирование`,
       `Железо`,
     ],
-    MIN_POSTS: 1,
-    MAX_POSTS: 1000,
+    MIN_POSTS_COUNT: 1,
+    MAX_POSTS_COUNT: 1000,
   },
 };
 

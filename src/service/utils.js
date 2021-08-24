@@ -1,23 +1,23 @@
 'use strict';
 
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
+const getRandomInt = (minValue, maxValue) => {
+  const min = Math.ceil(minValue);
+  const max = Math.floor(maxValue);
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const shuffle = (someArray) => {
-  for (let i = someArray.length - 1; i > 0; i--) {
+const shuffle = (arr) => {
+  const arrLocal = arr.slice();
+  for (let i = arrLocal.length - 1; i > 0; i--) {
     const randomPosition = Math.floor(Math.random() * i);
-    [someArray[i], someArray[randomPosition]] = [someArray[randomPosition], someArray[i]];
+    [arrLocal[i], arrLocal[randomPosition]] = [arrLocal[randomPosition], arrLocal[i]];
   }
 
-  return someArray;
+  return arrLocal;
 };
 
-const leadingZeroFormat = (number) => {
-  number = number.toString();
-  return number.length === 1 ? `0${number}` : number;
+const formatToLeadingZero = (number) => {
+  return number.toString().padStart(2, `0`);
 };
 
 const getRandomPostDate = () => {
@@ -28,9 +28,9 @@ const getRandomPostDate = () => {
   const daysInMonth = postDate.getDate();
   const randomDay = (monthDiff === 0) ? Math.min(day, getRandomInt(1, daysInMonth)) : getRandomInt(1, daysInMonth);
 
-  const monthFormatted = leadingZeroFormat(postDate.getMonth() + 1);
-  const dayFormatted = leadingZeroFormat(randomDay);
-  const [hour, min, sec] = [leadingZeroFormat(getRandomInt(0, 24)), leadingZeroFormat(getRandomInt(0, 60)), leadingZeroFormat(getRandomInt(0, 60))];
+  const monthFormatted = formatToLeadingZero(postDate.getMonth() + 1);
+  const dayFormatted = formatToLeadingZero(randomDay);
+  const [hour, min, sec] = [formatToLeadingZero(getRandomInt(0, 24)), formatToLeadingZero(getRandomInt(0, 59)), formatToLeadingZero(getRandomInt(0, 59))];
   // формально именно hour/min/sec могут конечно могут опередить текущее время
 
   return `${year}-${monthFormatted}-${dayFormatted} ${hour}:${min}:${sec}`;
@@ -39,6 +39,6 @@ const getRandomPostDate = () => {
 module.exports = {
   getRandomInt,
   getRandomPostDate,
-  leadingZeroFormat,
+  formatToLeadingZero,
   shuffle,
 };
