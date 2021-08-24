@@ -5,31 +5,42 @@ const chalk = require(`chalk`);
 const {getRandomInt, getRandomPostDate, shuffle} = require(`../utils`);
 const {
   ExitCode,
-  MockData: {
-    FILE_NAME,
-    TITLE,
-    ANNOUNCE,
-    CATEGORY,
-    MIN_POSTS_COUNT,
-    MAX_POSTS_COUNT,
-  }
+  FILE_NAME,
+  MIN_POSTS_COUNT,
+  MAX_POSTS_COUNT,
 } = require(`../constants`);
+const FILE_SENTENCES_PATH = `./data/sentences.txt`;
+const FILE_TITLES_PATH = `./data/titles.txt`;
+const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-
-const generatePosts = (count) =>
+const generatePosts = (count, sentences, titles, categories) =>
   Array(count).fill({}).map(() => (
     {
-      title: TITLE[getRandomInt(0, TITLE.length - 1)],
-      announce: shuffle(ANNOUNCE).slice(0, getRandomInt(1, 6)).join(` `),
-      fullText: shuffle(ANNOUNCE).slice(0, 7).join(` `),
+      title: titles[getRandomInt(0, titles.length - 1)],
+      announce: shuffle(sentences).slice(0, getRandomInt(1, 6)).join(` `),
+      fullText: shuffle(sentences).slice(0, 7).join(` `),
       createdDate: getRandomPostDate(),
-      category: shuffle(CATEGORY).slice(0, getRandomInt(1, 3)),
+      category: shuffle(categories).slice(0, getRandomInt(1, 3)),
     })
   );
+
+const readContent = async (path) => {
+  try {
+    let data = await fs.readFile(path, `utf8`);
+    return data.trim().split(`\n`);
+  } catch (err) {
+    console.log(chalk.red(`Ошибка при чтении файлa - ${err}`));
+    return [];
+  }
+};
 
 module.exports = {
   name: `--generate`,
   async run(args) {
+    const sentences = await readContent(FILE_SENTENCES_PATH);
+    const titles = await readContent(FILE_TITLES_PATH);
+    const categories = await readContent(FILE_CATEGORIES_PATH);
+
     const [count] = args;
     const postsCount = Number.parseInt(count, 10) || MIN_POSTS_COUNT;
 
@@ -38,7 +49,7 @@ module.exports = {
       process.exit(ExitCode.ERROR);
     }
 
-    const posts = generatePosts(postsCount);
+    const posts = generatePosts(postsCount, sentences, titles, categories);
     const content = JSON.stringify(posts);
 
     try {
