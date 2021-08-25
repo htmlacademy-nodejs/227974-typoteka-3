@@ -5,24 +5,25 @@ const chalk = require(`chalk`);
 const {getRandomInt, getRandomPostDate, shuffle} = require(`../utils`);
 const {
   ExitCode,
-  FILE_NAME,
+  FILE_NAME_MOCKS,
   MIN_POSTS_COUNT,
   MAX_POSTS_COUNT,
 } = require(`../constants`);
+
 const FILE_SENTENCES_PATH = `./data/sentences.txt`;
 const FILE_TITLES_PATH = `./data/titles.txt`;
 const FILE_CATEGORIES_PATH = `./data/categories.txt`;
 
-const generatePosts = (count, sentences, titles, categories) =>
-  Array(count).fill({}).map(() => (
-    {
-      title: titles[getRandomInt(0, titles.length - 1)],
-      announce: shuffle(sentences).slice(0, getRandomInt(1, 6)).join(` `),
-      fullText: shuffle(sentences).slice(0, 7).join(` `),
-      createdDate: getRandomPostDate(),
-      category: shuffle(categories).slice(0, getRandomInt(1, 3)),
-    })
+const generatePosts = (count, sentences, titles, categories) => {
+  return Array(count).fill({}).map(() => ({
+    title: titles[getRandomInt(0, titles.length - 1)],
+    announce: shuffle(sentences).slice(0, getRandomInt(1, 6)).join(` `),
+    fullText: shuffle(sentences).slice(0, 7).join(` `),
+    createdDate: getRandomPostDate(),
+    category: shuffle(categories).slice(0, getRandomInt(1, 3)),
+  })
   );
+};
 
 const readContent = async (path) => {
   try {
@@ -53,7 +54,7 @@ module.exports = {
     const content = JSON.stringify(posts);
 
     try {
-      await fs.writeFile(FILE_NAME, content);
+      await fs.writeFile(FILE_NAME_MOCKS, content);
       console.info(chalk.green(`Operation success. File created.`));
     } catch (e) {
       console.error(chalk.red(`Can't write data to file - ${e}`));

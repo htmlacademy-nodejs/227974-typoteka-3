@@ -7,7 +7,7 @@ module.exports = {
     SUCCESS: 0,
     ERROR: 1,
   },
-  FILE_NAME: `mocks.json`,
+  FILE_NAME_MOCKS: `mocks.json`,
   MIN_POSTS_COUNT: 1,
   MAX_POSTS_COUNT: 1000,
 };
