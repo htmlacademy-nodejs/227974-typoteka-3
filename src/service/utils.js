@@ -46,9 +46,27 @@ const getRandomPostDate = () => {
   return `${postYear}-${monthFormatted}-${dayFormatted} ${hour}:${min}:${sec}`;
 };
 
+const sendResponse = (res, httpCode, message) => {
+  const template = `
+    <!Doctype html>
+      <html lang="ru">
+      <head>
+        <title>${message}</title>
+      </head>
+      <body>${message}</body>
+    </html>`.trim();
+
+  res.writeHead(httpCode, {
+    'Content-Type': `text/html; charset=UTF-8`
+  });
+
+  res.end(template);
+};
+
 module.exports = {
   getRandomInt,
   getRandomPostDate,
   formatToLeadingZero,
   shuffle,
+  sendResponse,
 };
