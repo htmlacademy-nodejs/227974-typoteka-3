@@ -27,8 +27,8 @@ const generatePosts = (count, sentences, titles, categories) => {
 
 const readContent = async (path) => {
   try {
-    let data = await fs.readFile(path, `utf8`);
-    return data.trim().split(`\n`);
+    const fileContent = await fs.readFile(path, `utf8`);
+    return fileContent.trim().split(`\n`);
   } catch (err) {
     console.log(chalk.red(`Ошибка при чтении файлa - ${err}`));
     return [];
